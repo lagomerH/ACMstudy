@@ -86,3 +86,46 @@ f(x):从第一个门第一次到第x 个房间时的步数
 
 3. 递推
 
+```c++
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int dp[101][101];
+int a[101][101];
+int C, N;
+
+int f( int, int );
+int max( int, int );
+int main(){
+	cin >> C;
+	while(C--){
+		cin >> N;
+		for( int i = 1; i <= N; i++ ){
+			for(int j = 1; j <= i; j++ ){
+				cin >> a[i][j];
+			}
+		}	
+		memset( dp, -1, sizeof(dp) );
+		
+		cout << f( 1, 1 ) << endl;	
+	}
+	return 0;
+} 
+
+int f( int x, int y ){
+	if(  0 <= dp[x][y] )
+		return dp[x][y];
+	
+	if( N < x )
+		return 0;
+		
+	return dp[x][y] = a[x][y] + max( f( x+1, y), f( x+1, y+1 ) );
+	
+}
+
+int max( int x, int y ){
+	return x > y ? x : y;
+}
+```
+
