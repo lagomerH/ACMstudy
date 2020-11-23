@@ -129,3 +129,113 @@ int max( int x, int y ){
 }
 ```
 
+******
+
+
+
+#### 免费馅饼
+
+思路：
+
+* 状态：(x,t)---表示t秒时所在的位置
+* 指示函数：f(x,t)---t秒时在x处所能获得的最大馅饼数
+* 状态转移方程：f(x,t)=a(x,t)+max( f(x-1,t+1) , f(x,t+1), f(x+1,t+1))
+* 确定初始状态：f(5,0)
+
+算法实现：
+
+1. 记忆化搜索
+2. 递归
+
+```c++
+//内存溢出
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int dp[11][1000000];
+int a[11][1000000];
+int n;
+int T;
+int max( int, int, int );
+int f( int, int );
+int main(){
+	while(cin >> n && n){
+		memset( a, 0, sizeof(a) );
+		memset( dp, 0, sizeof(dp) );
+		int x;
+		for( int i=1; n >= i; i++ ){
+			cin >> x;
+			cin >> T;
+			a[x][T]++;
+		}
+		
+		cout << f( 5, 0) << endl;	
+	}	
+	return 0;
+}
+int f( int x, int t ){
+	if( t == n )
+		return a[x][t];
+	
+	else{
+		return a[x][t] + max( f( x-1, t+1 ), f( x, t+1 ), f( x+1, t+1 ) );
+	}
+}
+int max( int a, int b, int c ){
+	int y = a;
+	if( b>y )
+		y = b;
+	if( c>y )
+		y = c;
+	return c;
+}
+```
+
+```C++
+#include<iostream>
+#include<string.h>
+using namespace std;
+
+int dp[11][3];
+int a[11][100001];
+int n;
+int T;
+int Tmax;
+int max( int, int, int );
+int f( int, int );
+int main(){
+	while(cin >> n && n){
+		memset( a, 0, sizeof(a) );
+		memset( dp, 0, sizeof(dp) );
+		int x;
+		Tmax = 0;
+		for( int i=1; n >= i; i++ ){
+			cin >> x;
+			cin >> T;
+			if( T>Tmax )
+				Tmax = T;
+			a[x][T]++;
+		}
+		for( int i = Tmax; 0 <= i; i-- ){
+			for( int j = 1; j < 11; j ++ ){
+				dp[j][i%2] = a[j][i] + max( dp[j-1][(i+1)%2], dp[j][(i+1)%2], dp[j+1][(i+1)%2] );
+			}
+		}
+		cout << dp[5][0] << endl;
+	}	
+	return 0;
+}
+
+int max( int a, int b, int c ){
+	int y = a;
+	if( b>y )
+		y = b;
+	if( c>y )
+		y = c;
+	return y;
+}
+```
+
+
+
